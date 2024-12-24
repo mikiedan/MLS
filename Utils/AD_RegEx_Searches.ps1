@@ -2,38 +2,38 @@
 
 
 Get-ADcomputer -Filter 'Name -like "C1*C*"' -Properties OperatingSystem,dnshostname,ipv4address,LastLogonDate | 
-    where {$_.lastlogondate -lt (Get-Date).AddDays(-760) } | 
-        Select Name, Ipv4address, Lastlogondate
+    Where-Object {$_.lastlogondate -lt (Get-Date).AddDays(-760) } | 
+        Select-Object Name, Ipv4address, Lastlogondate
 
 Get-ADComputer -Filter * -Properties Name,ipv4address | 
     Where-Object {$_.Name -match 'C10[A-C]+00+[0-1][0-6][0-6]'} |
-        Select -ExpandProperty Name
+        Select-Object -ExpandProperty Name
 
 
 #Get all AWs Devices Domain Controllers ending in 101 or 102
 Get-ADComputer -Filter * -Properties Name,ipv4address |
     Where-Object {$_.Name -match 'C[1-4]*[A,C][C][0][0][1][0][1-2]'} |
-        Select -ExpandProperty Name
+        Select-Object -ExpandProperty Name
 
 Get-ADComputer -Filter * -Properties Name,ipv4address | 
     Where-Object {$_.Name -match 'C10[A-C]+00+[0-1][0-6][0-6]'} |
-        Select -ExpandProperty Name
+        Select-Object -ExpandProperty Name
 
 
 #Get all device with name starting with 019 and letters ending A-N
 Get-Adcomputer -Filter * -Properties Name,ipv4address | 
     Where-Object {$_.Name -match '^019[A-N]'} |
-        Select -ExpandProperty Name
+        Select-Object -ExpandProperty Name
 
 #Get all devices ending with PH00 1-3 
 Get-Adcomputer -Filter * -Properties Name,ipv4address | 
     Where-Object {$_.Name -match 'PH00[1-3]'} |
-        Select -ExpandProperty Name
+        Select-Object -ExpandProperty Name
 
 #Get all devices ending with VA0 0-9 
 Get-Adcomputer -Filter * -Properties Name,ipv4address |
     Where-Object {$_.Name -match 'AVa0[0-9]'} |
-        Select -ExpandProperty Name
+        Select-Object -ExpandProperty Name
 
 
 $allaws= Get-Adcomputer -Filter * -Properties Name,ipv4address |
