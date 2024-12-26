@@ -62,3 +62,5 @@ Get-ADComputer -Filter * -Properties Name,ipv4address |
 $sitevms = Get-ADComputer -Filter * -Properties Name,ipv4address |
     Where-Object {$_.Name -match '\d{3}[A-Za-z][pP][(Bb|Hh)]00[1-3]'} |
         Select-Object -ExpandProperty Name
+
+        ^[C][1-4](AC|CC|0AC|0CC)00[0-5]0[1-9]
