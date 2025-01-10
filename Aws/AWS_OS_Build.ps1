@@ -255,7 +255,7 @@ if ($whatOS -eq '2016')
     {
 
     #Search for OS by ami
-    $whichwinimage = Get-EC2Image -Owner amazon, self | 
+    $howmanyimage = Get-EC2Image -Owner amazon, self | 
         Where-Object {$_.Name -match '^Windows_Server-2016-English-Full-Base' -and ($_.Creationdate -gt $dates2)} | Sort-Object Creationdate |
             Select-Object -ExpandProperty ImageID
 
@@ -264,10 +264,13 @@ if ($whatOS -eq '2016')
         Where-Object {$_.Name -match '^Windows_Server-2016-English-Full-Base' -and ($_.Creationdate -gt $dates2)} | Sort-Object Creationdate |
             Select-Object -ExpandProperty Description
 
-    $winimage = $whichwinimage[0]  
+    $whichwinimage = @()
+    $whichwinimage += $howmanyimage
+    $winimage = $whichwinimage[0]
+        
     Write-Host -ForegroundColor Green "Building Windows 2016 OS..." 
     $OS = $winimage1.substring(0,29)
-    $BuildOS = $OS[0]
+    $BuildOS = $OS
     $keynamevalue = "Win2016"
     $keyname = $keynamevalue
     }
@@ -275,19 +278,23 @@ else
     {
 
     #Search for OS by ami
-    $whichwinimage = Get-EC2Image -Owner amazon, self | 
+    $howmanyimage = Get-EC2Image -Owner amazon, self | 
         Where-Object {$_.Name -match '^Windows_Server-2022-English-Full-Base' -and ($_.Creationdate -gt $dates2)} | Sort-Object Creationdate |
             Select-Object -ExpandProperty ImageID
 
     #Search for OS by name
     $winimage2 = Get-EC2Image -Owner amazon, self | 
         Where-Object {$_.Name -match '^Windows_Server-2022-English-Full-Base' -and ($_.Creationdate -gt $dates2)} | Sort-Object Creationdate |
-            Select-Object Description,Creationdate,Name
+            Select-Object -ExpandProperty Description
 
-    $winimage = $whichwinimage[0] 
+    $whichwinimage = @()
+    $whichwinimage += $howmanyimage
+    $winimage = $whichwinimage[0]
+    
     Write-Host -ForegroundColor Cyan "Building Windows 2022 OS..."
     $OS = $winimage2.substring(0,29)
     $BuildOS = $OS[0]
+
     $keynamevalue = "SCOM-Key-Pair"
     $keyname = $keynamevalue
     }
