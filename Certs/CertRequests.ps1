@@ -1,6 +1,7 @@
 ###########################################
 #Define the domain 
 $domainfqdn = $env:USERDNSDOMAIN
+$user = $Env:USERNAME
 #Get Hostname 
 $GetHost = (hostname)
 #Create FQDN
@@ -8,7 +9,7 @@ $fqdn = $GetHost + '.'+ $domainfqdn
 #Name of thefile to create which will contain Domain's CA
 $domainca = 'pki.txt'
 #Define a local folder path to create
-$mlfolderpath = 'C:\microland\ml\pki'
+$mlfolderpath = "C:\microland\$user\pki"
 #Define Certificate Request inf file
 $CertfileName = "Cert_Request.inf"
 
@@ -30,7 +31,7 @@ $ca = certutil –dump
 #Output to a file
 $ca | out-file -FilePath $filename
 #Get CA name details from file
-$ca = Get-Content -Path $filename -TotalCount 8 | select -Last 1
+$ca = Get-Content -Path $filename -TotalCount 8 | Select-Object -Last 1
 #Tidy details
 $ca2= $ca.Replace('  Config:                 	`',"")
 #Tidy details
