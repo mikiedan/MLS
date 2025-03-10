@@ -53,3 +53,6 @@ if((Get-PSDrive -Name $SiteCode -PSProvider CMSite -ErrorAction SilentlyContinue
 
 # Set the current location to be the site code.
 Set-Location "$($SiteCode):\" #@initParams
+
+
+Add-CMReportingServicePoint -SiteCode $SiteCode -SiteSystemServerName "YourServerName" -DatabaseServerName "YourDatabaseServerName" -DatabaseName "YourDatabaseName" -ReportServerInstance "YourReportServerInstance"
