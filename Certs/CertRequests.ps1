@@ -82,4 +82,5 @@ certreq -submit -q -config $ca3 ns.req ns.cer
 certreq -accept -machine ns.cer
 
 #Clean up
+Set-Location -Path 'C:\'
 Remove-Item -Path $mlfolderpath -Recurse -Force
