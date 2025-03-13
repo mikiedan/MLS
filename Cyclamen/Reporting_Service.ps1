@@ -1,20 +1,38 @@
 $domainfqdn = $env:USERDNSDOMAIN
-$domainfqdn = 'test.local'
+$Service = 'svc-ecmadmin'
 
 #Get Enviroment hash table 
-$Whatdomain =     @{'Dev' =          @{'MECM'        = 'C2AC00111'
+$Whatdomain =     @{'Dev' =             @{      'MECM'        = 'C2AC00111'
                                                 'SQLAC'     = 'C2AC00105'
                                                 'SiteCode'  = 'DET'
                                                 'domain'  = 'appt.local'
+                                                'DBName' = 'CM_DET'
+                                                'InstName' = 'MSSQLServer'
+                                                'Prefix' = 'Appt\'
                                         }
-                    'Test' =          @{'MECM' = 'C1AC00111'
-                                                'SQLAC'     = 'C2AC00105'
+                    'Test' =            @{      'MECM' = 'C1AC00111'
+                                                'SQLAC'     = 'C1AC00105'
                                                 'SiteCode'  = 'TSL'
                                                 'domain'  = 'test.local'
+                                                'DBName' = 'CM_TSL'
+                                                'InstName' = 'MSSQLServer'
+                                                'Prefix' = 'Test\'
                                         }
-                    'pret.local' =          @{'MECM' = 'C3AC00111'
+                    'Preprod' =         @{      'MECM' = 'C3AC00111'
+                                                'SQLAC'     = 'C3AC00105'
+                                                'SiteCode'  = 'DET'
+                                                'domain'  = 'Pret.local'
+                                                'DBName' = 'CM_DET'
+                                                'InstName' = 'MSSQLServer'
+                                                'Prefix' = 'Pret\'
                                         }
-                    'cycitplatprod.local' = @{'MECM' = 'C10AC00111'
+                    'Production' =      @{      'MECM' = 'C10AC00111'
+                                                'SQLAC'     = 'C3AC00105'
+                                                'SiteCode'  = 'DET'
+                                                'domain'  = 'Pret.local'
+                                                'DBName' = 'CM_DET'
+                                                'InstName' = 'MSSQLServer'
+                                                'Prefix' = 'Pret\'
                                     }
                     }
   
@@ -22,23 +40,46 @@ $Whatdomain =     @{'Dev' =          @{'MECM'        = 'C2AC00111'
 #Non Production Tag info
 If ($domainfqdn -eq 'appt.local') 
     {
-    $SiteCodevar = $Whatdomain.'Dev'.SiteCode
-    $ProviderMachineNamevar = $Whatdomain.'Dev'.MECM + '.' + $Whatdomain.'Dev'.domain
-    
+    $SiteCodevar = $Whatdomain.Dev.SiteCode
+    $ProviderMachineNamevar = $Whatdomain.Dev.MECM + '.' + $Whatdomain.Dev.domain
+    $SitesystemDBvar = $Whatdomain.Dev.SQLAC + '.' + $Whatdomain.Dev.domain
+    $DBservervar = $Whatdomain.Dev.DBName
+    $DBInstancevar = $Whatdomain.Dev.InstName
+    $Servicevar = $Whatdomain.Dev.Prefix + $Service
     }
-elseif ($domainfqdn -eq 'test.local') 
+elseif ($domainfqdn -eq 'Test.local') 
     {
-    $SiteCodevar = $Whatdomain.'Test'.SiteCode
-    $ProviderMachineNamevar = $Whatdomain.'Test'.MECM + '.' + $Whatdomain.'Test'.domain
-}                    
+    $SiteCodevar = $Whatdomain.Test.SiteCode
+    $ProviderMachineNamevar = $Whatdomain.Test.MECM + '.' + $Whatdomain.Test.domain
+    $SitesystemDBvar = $Whatdomain.Test.SQLAC + '.' + $Whatdomain.Test.domain
+    $DBservervar = $Whatdomain.Test.DBName
+    $DBInstancevar = $Whatdomain.Test.InstName
+    $Servicevar = $Whatdomain.Test.Prefix + $Service
+    }
+elseif ($domainfqdn -eq 'Pret.local') 
+    {
+    $SiteCodevar = $Whatdomain.PreProd.SiteCode
+    $ProviderMachineNamevar = $Whatdomain.PreProd.MECM + '.' + $Whatdomain.PreProd.domain
+    $SitesystemDBvar = $Whatdomain.PreProd.SQLAC + '.' + $Whatdomain.PreProd.domain
+    $DBservervar = $Whatdomain.PreProd.DBName
+    $DBInstancevar = $Whatdomain.PreProd.InstName
+    $Servicevar = $Whatdomain.PreProd.Prefix + $Service
+    } 
+elseif ($domainfqdn -eq 'Cycitplatprod.local') 
+    {
+    $SiteCodevar = $Whatdomain.Production.SiteCode
+    $ProviderMachineNamevar = $Whatdomain.Production.MECM + '.' + $Whatdomain.Production.domain
+    $SitesystemDBvar = $Whatdomain.Production.SQLAC + '.' + $Whatdomain.Production.domain
+    $DBservervar = $Whatdomain.Production.DBName
+    $DBInstancevar = $Whatdomain.Production.InstName
+    $Servicevar = $Whatdomain.Production.Prefix + $Service 
+    }                   
 
                     $SiteCode = $SiteCodevar # Site code 
                     $ProviderMachineName = $ProviderMachineNamevar # SMS Provider machine name
                     
                     # Customizations
-                    #$initParams = @{}
-                    #$initParams.Add("Verbose", $true) # Uncomment this line to enable verbose logging
-                    #$initParams.Add("ErrorAction", "Stop") # Uncomment this line to stop the script on any errors
+                    $initParams = @{}
                     
                     # Do not change anything below this line
                     
@@ -52,7 +93,7 @@ if((Get-PSDrive -Name $SiteCode -PSProvider CMSite -ErrorAction SilentlyContinue
 }
 
 # Set the current location to be the site code.
-Set-Location "$($SiteCode):\" #@initParams
+Set-Location "$($SiteCode):\" @initParams
 
-
-Add-CMReportingServicePoint -SiteCode $SiteCode -SiteSystemServerName "YourServerName" -DatabaseServerName "YourDatabaseServerName" -DatabaseName "YourDatabaseName" -ReportServerInstance "YourReportServerInstance"
+# Add the Reporting Service Point role to the site
+Add-CMReportingServicePoint -SiteCode $SiteCode -SiteSystemServerName $SitesystemDBvar -DatabaseServerName $SitesystemDBvar -DatabaseName $DBservervar -ReportServerInstance $DBInstancevar -UserName $Servicevar

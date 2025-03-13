@@ -14,4 +14,4 @@ Foreach ($CABfile in $CABfiles) {
 }
 
 #Once all cab or driver files loaded save and dismount the image from the temp location.
-Dismount-WindowsImage -path $WinPETemp -save
+Dismount-WindowsImage -path $WinPETemp -commit
