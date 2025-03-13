@@ -6,7 +6,7 @@ $user = $Env:USERNAME
 $GetHost = (hostname)
 #Create FQDN
 $fqdn = $GetHost + '.'+ $domainfqdn
-#Name of thefile to create which will contain Domain's CA
+#Name of the file to create which will contain Domain's CA
 $domainca = 'pki.txt'
 #Define a local folder path to create
 $mlfolderpath = "C:\microland\$user\pki"
