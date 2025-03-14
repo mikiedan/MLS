@@ -1,5 +1,5 @@
 #Get MAC address of the adpater that is currently connected.
-$getmac = Get-NetAdapter | Where-Object {$_.Status -eq 'Up'} | Select-Object -ExpandProperty MacAddress
+Get-NetAdapter | Where-Object {$_.Status -eq 'Up'} | Select-Object -ExpandProperty MacAddress
 
 #Get the hostname.
 $gethost = (Hostname)
